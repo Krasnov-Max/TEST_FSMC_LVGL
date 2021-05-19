@@ -20,14 +20,16 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "spi.h"
+#include "usart.h"
 #include "gpio.h"
 #include "fsmc.h"
-#include "ili9341.h"
-#include "lvgl.h"
-//#include "lv_port_disp.h"
+#include <stdio.h>
+#include <stdlib.h>
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#include "lvgl.h"
+#include "ili9341.h"
 
 /* USER CODE END Includes */
 
@@ -70,6 +72,49 @@ void SystemClock_Config(void);
 static void event_handler(lv_obj_t * obj, lv_event_t event);
 static void disp_init(void);
 static void disp_flush(lv_disp_drv_t * disp_drv, const lv_area_t * area, lv_color_t * color_p);
+void lvglLoggerCallback(lv_log_level_t level, const char * file, uint32_t line, const char * functionName, const char* dsc);
+#if defined(__GNUC__)
+int _write(int fd, char * ptr, int len)
+{
+  HAL_UART_Transmit(&huart2, (uint8_t *) ptr, len, HAL_MAX_DELAY);
+  return len;
+}
+#elif defined (__ICCARM__)
+#include "LowLevelIOInterface.h"
+size_t __write(int handle, const unsigned char * buffer, size_t size)
+{
+  HAL_UART_Transmit(&huart1, (uint8_t *) buffer, size, HAL_MAX_DELAY);
+  return size;
+}
+#elif defined (__CC_ARM)
+int fputc(int ch, FILE *f)
+{
+    HAL_UART_Transmit(&huart1, (uint8_t *)&ch, 1, HAL_MAX_DELAY);
+    return ch;
+}
+#endif
+
+// OR:
+
+// Add syscalls.c with GCC
+
+#ifdef __GNUC__
+#define PUTCHAR_PROTOTYPE int __io_putchar(int ch)
+#else
+#define PUTCHAR_PROTOTYPE int fputc(int ch, FILE *f)
+#endif /* __GNUC__ */
+
+/**
+  * @brief  Retargets the C library printf function to the USART.
+  * @param  None
+  * @retval None
+  */
+PUTCHAR_PROTOTYPE
+{
+  HAL_UART_Transmit(&huart2, (uint8_t *)&ch, 1, HAL_MAX_DELAY);
+  return ch;
+}
+
 /* USER CODE END 0 */
 
 /**
@@ -102,6 +147,7 @@ uint16_t i;
   MX_GPIO_Init();
   MX_FSMC_Init();
   MX_SPI1_Init();
+  MX_USART2_UART_Init();
   /* USER CODE BEGIN 2 */
   LL_GPIO_ResetOutputPin(LCD_RESET_GPIO_Port, LCD_RESET_Pin);
   HAL_Delay(10);
@@ -111,12 +157,16 @@ uint16_t i;
  lcdTest();
   lcdSetTextFont(&Font20);
   lcdPrintf("Test");
+  printf("Test");
    LL_GPIO_SetOutputPin(GPIOE, LL_GPIO_PIN_2); 
   LL_mDelay(1000);
   lcdFillRGB(COLOR_MAGENTA);
    LL_mDelay(1000);
     LL_GPIO_ResetOutputPin(GPIOE, LL_GPIO_PIN_2); 
    lv_init();
+    #if LV_USE_LOG == 1
+      lv_log_register_print_cb( lvglLoggerCallback );
+    #endif
    disp_init();
    lv_disp_buf_init(&disp_buf_1, buf1_1, NULL, LV_HOR_RES_MAX * 10);   /*Initialize the display buffer*/
    lv_disp_drv_init(&disp_drv);                    /*Basic initialization*/
@@ -164,11 +214,10 @@ screenMain = lv_scr_act();
   while (1)
   {
     /* USER CODE END WHILE */
-   
-    lv_task_handler();
-    LL_mDelay(5);
-   
+
     /* USER CODE BEGIN 3 */
+    LL_mDelay(10);
+    lv_task_handler();
   }
   /* USER CODE END 3 */
 }
@@ -271,6 +320,35 @@ static void disp_flush(lv_disp_drv_t * disp_drv, const lv_area_t * area, lv_colo
     lv_disp_flush_ready(disp_drv);
     
 }
+
+void lvglLoggerCallback(lv_log_level_t level, const char * file, uint32_t line, const char * functionName, const char* dsc)
+            {
+                switch( level )
+                {
+                    case LV_LOG_LEVEL_ERROR:
+                        printf( "[ERROR]:" );
+                    break;
+                    case LV_LOG_LEVEL_WARN:
+                        printf( "[WARNING]:" );
+                    break;
+                    case LV_LOG_LEVEL_INFO:
+                        printf( "[INFO]:" );
+                    break;
+                    case LV_LOG_LEVEL_TRACE:
+                        printf( "[TRACE]:" );
+                    break;
+
+                    default:
+                        printf( "[LVGL_LOG]:" );
+                }
+                printf( "File:"  );
+                printf("%s", file );
+                printf( ":" );
+                printf(":functon ");
+                printf("%s", functionName);
+                printf( " %s ",dsc );
+               
+            }
 /* USER CODE END 4 */
 
 /**
