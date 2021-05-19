@@ -64,7 +64,6 @@ Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_ll_dma.c \
 Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_tim.c \
 Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_tim_ex.c \
 Core/Src/system_stm32f1xx.c \
-lvgl/lvgl_dev/lv_port_disp.c \
 lvgl/lvgl_dev/lv_port_indev.c \
 lvgl/src/lv_core/lv_debug.c \
 lvgl/src/lv_core/lv_disp.c \
@@ -175,7 +174,8 @@ ILI9341/font8.c \
 ILI9341/font12.c \
 ILI9341/font16.c \
 ILI9341/font20.c \
-ILI9341/font24.c \
+ILI9341/font24.c 
+#lvgl/lvgl_dev/lv_port_disp.c 
 
 
 # ASM sources
@@ -255,9 +255,9 @@ C_INCLUDES =  \
 
 
 # compile gcc flags
-ASFLAGS = $(MCU) $(AS_DEFS) $(AS_INCLUDES) $(OPT) -Wall -fdata-sections -ffunction-sections
+ASFLAGS = $(MCU) $(AS_DEFS) $(AS_INCLUDES) $(OPT) -Wall -O3 -fdata-sections -ffunction-sections
 
-CFLAGS = $(MCU) $(C_DEFS) $(C_INCLUDES) $(OPT) -Wall -fdata-sections -ffunction-sections
+CFLAGS = $(MCU) $(C_DEFS) $(C_INCLUDES) $(OPT) -Wall -O3 -fdata-sections -ffunction-sections
 
 ifeq ($(DEBUG), 1)
 CFLAGS += -g -gdwarf-2
@@ -277,7 +277,7 @@ LDSCRIPT = STM32F103ZETx_FLASH.ld
 # libraries
 LIBS = -lc -lm -lnosys 
 LIBDIR = 
-LDFLAGS = $(MCU) -specs=nano.specs -T$(LDSCRIPT) $(LIBDIR) $(LIBS) -Wl,-Map=$(BUILD_DIR)/$(TARGET).map,--cref -Wl,--gc-sections
+LDFLAGS = $(MCU) -specs=nano.specs -T$(LDSCRIPT) $(LIBDIR) $(LIBS) -Wl,-O3,-Map=$(BUILD_DIR)/$(TARGET).map,--cref -Wl,--gc-sections
 
 # default action: build all
 all: $(BUILD_DIR)/$(TARGET).elf $(BUILD_DIR)/$(TARGET).hex $(BUILD_DIR)/$(TARGET).bin

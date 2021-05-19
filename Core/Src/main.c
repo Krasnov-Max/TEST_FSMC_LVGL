@@ -24,7 +24,7 @@
 #include "fsmc.h"
 #include "ili9341.h"
 #include "lvgl.h"
-#include "lv_port_disp.h"
+//#include "lv_port_disp.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -54,6 +54,9 @@ lv_obj_t *btn1;
 lv_obj_t *btn2;
 lv_obj_t *screenMain;
 lv_obj_t *label;
+lv_disp_drv_t disp_drv;                         /*Descriptor of a display driver*/
+static lv_disp_buf_t disp_buf_1;
+static lv_color_t buf1_1[LV_HOR_RES_MAX * 10];  
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -65,6 +68,8 @@ void SystemClock_Config(void);
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 static void event_handler(lv_obj_t * obj, lv_event_t event);
+static void disp_init(void);
+static void disp_flush(lv_disp_drv_t * disp_drv, const lv_area_t * area, lv_color_t * color_p);
 /* USER CODE END 0 */
 
 /**
@@ -112,8 +117,19 @@ uint16_t i;
    LL_mDelay(1000);
     LL_GPIO_ResetOutputPin(GPIOE, LL_GPIO_PIN_2); 
    lv_init();
-   lv_port_disp_init();
-
+   disp_init();
+   lv_disp_buf_init(&disp_buf_1, buf1_1, NULL, LV_HOR_RES_MAX * 10);   /*Initialize the display buffer*/
+   lv_disp_drv_init(&disp_drv);                    /*Basic initialization*/
+    /*Set up the functions to access to your display*/
+    /*Set the resolution of the display*/
+    disp_drv.hor_res = 240;
+    disp_drv.ver_res = 320;
+    /*Used to copy the buffer's content to the display*/
+    disp_drv.flush_cb = disp_flush;
+    /*Set a display buffer*/
+    disp_drv.buffer = &disp_buf_1;
+     lv_disp_drv_register(&disp_drv);
+   
 screenMain = lv_scr_act();
    label = lv_label_create(screenMain, NULL);
   lv_label_set_long_mode(label, LV_LABEL_LONG_BREAK);
@@ -150,7 +166,7 @@ screenMain = lv_scr_act();
     /* USER CODE END WHILE */
    
     lv_task_handler();
-    
+    LL_mDelay(5);
    
     /* USER CODE BEGIN 3 */
   }
@@ -211,6 +227,49 @@ static void event_handler(lv_obj_t * obj, lv_event_t event)
     else if(event == LV_EVENT_VALUE_CHANGED) {
         printf("Toggled\n");
     }
+}
+
+
+
+/**********************
+ *   STATIC FUNCTIONS
+ **********************/
+
+/* Initialize your display and the required peripherals. */
+static void disp_init(void)
+{
+    /*You code here*/
+ 
+  lcdInit();
+ 
+
+}
+
+/* Flush the content of the internal buffer the specific area on the display
+ * You can use DMA or any hardware acceleration to do this operation in the background but
+ * 'lv_disp_flush_ready()' has to be called when finished. */
+static void disp_flush(lv_disp_drv_t * disp_drv, const lv_area_t * area, lv_color_t * color_p)
+{
+    /*The most simple case (but also the slowest) to put all pixels to the screen one-by-one*/
+
+    int32_t x;
+    int32_t y;
+    for(y = area->y1; y <= area->y2; y++) 
+        {
+            for(x = area->x1; x <= area->x2; x++) 
+                {
+                    /* Put a pixel to the display. For example: */
+                    /* put_px(x, y, *color_p)*/
+                    lcdDrawPixel(x, y, color_p->full);
+                }           
+            color_p++;
+        }
+    
+
+    /* IMPORTANT!!!
+     * Inform the graphics library that you are ready with the flushing*/
+    lv_disp_flush_ready(disp_drv);
+    
 }
 /* USER CODE END 4 */
 
