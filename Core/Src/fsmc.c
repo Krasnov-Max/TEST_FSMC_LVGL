@@ -1,3 +1,4 @@
+/* USER CODE BEGIN Header */
 /**
   ******************************************************************************
   * File Name          : FSMC.c
@@ -6,36 +7,22 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) 2021 STMicroelectronics.
-  * All rights reserved.</center></h2>
+  * Copyright (c) 2022 STMicroelectronics.
+  * All rights reserved.
   *
-  * This software component is licensed by ST under BSD 3-Clause license,
-  * the "License"; You may not use this file except in compliance with the
-  * License. You may obtain a copy of the License at:
-  *                        opensource.org/licenses/BSD-3-Clause
+  * This software is licensed under terms that can be found in the LICENSE file
+  * in the root directory of this software component.
+  * If no LICENSE file comes with this software, it is provided AS-IS.
   *
   ******************************************************************************
   */
+/* USER CODE END Header */
 
 /* Includes ------------------------------------------------------------------*/
 #include "fsmc.h"
 
 /* USER CODE BEGIN 0 */
-//void LCD_CmdWrite(const uint16_t Command)
-//{
-//	 *(uint16_t *) (LCD_REG) = Command;
-//}
- 
-//void LCD_DataWrite(const uint16_t Data)
-//{
-//	*(uint16_t *) (LCD_DATA) = Data;
-//}
- 
-//void LCD_WriteReg(const uint8_t LCD_Reg, const uint16_t LCD_RegValue)
-//{
-//	*(uint16_t *) (LCD_REG) = LCD_Reg;
-//	*(uint16_t *) (LCD_DATA) = LCD_RegValue;
-//}
+
 /* USER CODE END 0 */
 
 SRAM_HandleTypeDef hsram1;
@@ -71,13 +58,14 @@ void MX_FSMC_Init(void)
   hsram1.Init.ExtendedMode = FSMC_EXTENDED_MODE_DISABLE;
   hsram1.Init.AsynchronousWait = FSMC_ASYNCHRONOUS_WAIT_DISABLE;
   hsram1.Init.WriteBurst = FSMC_WRITE_BURST_DISABLE;
+  hsram1.Init.PageSize = FSMC_PAGE_SIZE_NONE;
   /* Timing */
-  Timing.AddressSetupTime = 15;
-  Timing.AddressHoldTime = 15;
-  Timing.DataSetupTime = 255;
-  Timing.BusTurnAroundDuration = 15;
-  Timing.CLKDivision = 16;
-  Timing.DataLatency = 17;
+  Timing.AddressSetupTime = 2;
+  Timing.AddressHoldTime = 2;
+  Timing.DataSetupTime = 10;
+  Timing.BusTurnAroundDuration = 2;
+  Timing.CLKDivision = 2;
+  Timing.DataLatency = 3;
   Timing.AccessMode = FSMC_ACCESS_MODE_A;
   /* ExtTiming */
 
@@ -85,11 +73,6 @@ void MX_FSMC_Init(void)
   {
     Error_Handler( );
   }
-
-  /** Disconnect NADV
-  */
-
-  __HAL_AFIO_FSMCNADV_DISCONNECTED();
 
   /* USER CODE BEGIN FSMC_Init 2 */
 
@@ -138,7 +121,9 @@ static void HAL_FSMC_MspInit(void){
                           |GPIO_PIN_11|GPIO_PIN_12|GPIO_PIN_13|GPIO_PIN_14
                           |GPIO_PIN_15;
   GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
-  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+  GPIO_InitStruct.Alternate = GPIO_AF12_FSMC;
 
   HAL_GPIO_Init(GPIOE, &GPIO_InitStruct);
 
@@ -147,7 +132,9 @@ static void HAL_FSMC_MspInit(void){
                           |GPIO_PIN_14|GPIO_PIN_15|GPIO_PIN_0|GPIO_PIN_1
                           |GPIO_PIN_4|GPIO_PIN_5|GPIO_PIN_7;
   GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
-  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+  GPIO_InitStruct.Alternate = GPIO_AF12_FSMC;
 
   HAL_GPIO_Init(GPIOD, &GPIO_InitStruct);
 
@@ -231,5 +218,3 @@ void HAL_SRAM_MspDeInit(SRAM_HandleTypeDef* sramHandle){
 /**
   * @}
   */
-
-/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

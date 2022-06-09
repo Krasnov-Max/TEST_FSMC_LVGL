@@ -7,13 +7,12 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) 2021 STMicroelectronics.
-  * All rights reserved.</center></h2>
+  * Copyright (c) 2022 STMicroelectronics.
+  * All rights reserved.
   *
-  * This software component is licensed by ST under Ultimate Liberty license
-  * SLA0044, the "License"; You may not use this file except in compliance with
-  * the License. You may obtain a copy of the License at:
-  *                             www.st.com/SLA0044
+  * This software is licensed under terms that can be found in the LICENSE file
+  * in the root directory of this software component.
+  * If no LICENSE file comes with this software, it is provided AS-IS.
   *
   ******************************************************************************
   */
@@ -28,18 +27,18 @@ extern "C" {
 #endif
 
 /* Includes ------------------------------------------------------------------*/
-#include "stm32f1xx_hal.h"
+#include "stm32f4xx_hal.h"
 
-#include "stm32f1xx_ll_rcc.h"
-#include "stm32f1xx_ll_bus.h"
-#include "stm32f1xx_ll_system.h"
-#include "stm32f1xx_ll_exti.h"
-#include "stm32f1xx_ll_cortex.h"
-#include "stm32f1xx_ll_utils.h"
-#include "stm32f1xx_ll_pwr.h"
-#include "stm32f1xx_ll_dma.h"
-#include "stm32f1xx_ll_spi.h"
-#include "stm32f1xx_ll_gpio.h"
+#include "stm32f4xx_ll_rcc.h"
+#include "stm32f4xx_ll_bus.h"
+#include "stm32f4xx_ll_system.h"
+#include "stm32f4xx_ll_exti.h"
+#include "stm32f4xx_ll_cortex.h"
+#include "stm32f4xx_ll_utils.h"
+#include "stm32f4xx_ll_pwr.h"
+#include "stm32f4xx_ll_dma.h"
+#include "stm32f4xx_ll_spi.h"
+#include "stm32f4xx_ll_gpio.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -58,8 +57,6 @@ extern "C" {
 
 /* Exported macro ------------------------------------------------------------*/
 /* USER CODE BEGIN EM */
- 
-
 
 /* USER CODE END EM */
 
@@ -71,12 +68,32 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
-#define SPI1_CS_Pin LL_GPIO_PIN_4
-#define SPI1_CS_GPIO_Port GPIOA
-#define PEN_Pin LL_GPIO_PIN_13
-#define PEN_GPIO_Port GPIOD
-#define LCD_RESET_Pin LL_GPIO_PIN_1
-#define LCD_RESET_GPIO_Port GPIOE
+#define PC14_OSC32_IN_Pin LL_GPIO_PIN_14
+#define PC14_OSC32_IN_GPIO_Port GPIOC
+#define PC15_OSC32_OUT_Pin LL_GPIO_PIN_15
+#define PC15_OSC32_OUT_GPIO_Port GPIOC
+#define PH0_OSC_IN_Pin LL_GPIO_PIN_0
+#define PH0_OSC_IN_GPIO_Port GPIOH
+#define PH1_OSC_OUT_Pin LL_GPIO_PIN_1
+#define PH1_OSC_OUT_GPIO_Port GPIOH
+#define B1_Pin LL_GPIO_PIN_0
+#define B1_GPIO_Port GPIOA
+#define BOOT1_Pin LL_GPIO_PIN_2
+#define BOOT1_GPIO_Port GPIOB
+#define LD4_Pin LL_GPIO_PIN_12
+#define LD4_GPIO_Port GPIOD
+#define LD3_Pin LL_GPIO_PIN_13
+#define LD3_GPIO_Port GPIOD
+#define SWDIO_Pin LL_GPIO_PIN_13
+#define SWDIO_GPIO_Port GPIOA
+#define SWCLK_Pin LL_GPIO_PIN_14
+#define SWCLK_GPIO_Port GPIOA
+#define CS_SPI3_Pin LL_GPIO_PIN_15
+#define CS_SPI3_GPIO_Port GPIOA
+#define LIGHT_ON_Pin LL_GPIO_PIN_2
+#define LIGHT_ON_GPIO_Port GPIOD
+#define rst_Pin LL_GPIO_PIN_6
+#define rst_GPIO_Port GPIOD
 /* USER CODE BEGIN Private defines */
 
 /* USER CODE END Private defines */
@@ -86,5 +103,3 @@ void Error_Handler(void);
 #endif
 
 #endif /* __MAIN_H */
-
-/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

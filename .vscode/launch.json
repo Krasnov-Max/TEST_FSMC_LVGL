@@ -8,19 +8,20 @@
             "type": "cortex-debug",
             "request": "launch",
             "name": "Debug",
-            "servertype": "stutil",
-            
+            "servertype": "openocd",
+            "runToEntryPoint" : "runToMain",
+            "showDevDebugOutput": "both",
             "cwd": "${workspaceRoot}",
            
             "interface": "swd",
-            "device": "STM32F103ZET",
-            "svdFile": "/home/max/SVD/STM32F1/STM32F103.svd",
+            "device": "STM32F407VGT",
+            "svdFile": "/home/max/SVD/STM32F4/STM32F407.svd",
                      //"preLaunchTask": "cargo build",
             "runToMain": true,
-            "executable": "build/TEST_FSMC.elf",
+            "executable": "build/FSMC_LVGL.elf",
             "configFiles": [
-                "/usr/share/openocd/scripts/interface/stlink-v2.cfg",
-                "/usr/share/openocd/scripts/target/stm32f1.cfg"
+                "/usr/local/share/openocd/scripts/interface/stlink-v2.cfg",
+                "/usr/local/share/openocd/scripts/target/stm32f4x.cfg"
                 
             ],
            

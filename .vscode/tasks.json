@@ -26,7 +26,7 @@
         {
         "label": "Load Firmware",
         "type": "shell",
-        "command": "/usr/local/bin/st-flash write ./build/TEST_FSMC.bin 0x08000000",
+        "command": "/usr/local/bin/st-flash write ./build/FSMC_LVGL.bin 0x08000000",
         "options": {
         "cwd": "${workspaceRoot}"
         },

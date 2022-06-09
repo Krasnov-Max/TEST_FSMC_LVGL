@@ -15,7 +15,7 @@ enum {
 } MemoryAccessControlColorOrder;
 
 static lcdPropertiesTypeDef  lcdProperties = { ILI9341_PIXEL_WIDTH, ILI9341_PIXEL_HEIGHT, LCD_ORIENTATION_PORTRAIT,true, true };
-static lcdFontPropTypeDef lcdFont = {COLOR_YELLOW, COLOR_BLACK, &Font12, 1};
+//static lcdFontPropTypeDef lcdFont = {COLOR_YELLOW, COLOR_BLACK, &Font12, 1};
 static lcdCursorPosTypeDef cursorXY = {0, 0};
 
 static unsigned char lcdPortraitConfig = 0;
@@ -737,7 +737,7 @@ void lcdFillTriangle(int16_t x0, int16_t y0, int16_t x1, int16_t y1, int16_t x2,
     }
 }
 
-void lcdDrawImage(uint16_t x, uint16_t y, GUI_CONST_STORAGE GUI_BITMAP* pBitmap)
+/*void lcdDrawImage(uint16_t x, uint16_t y, GUI_CONST_STORAGE GUI_BITMAP* pBitmap)
 {
 	if((x >= lcdProperties.width) || (y >= lcdProperties.height)) return;
 	if((x + pBitmap->xSize - 1) >= lcdProperties.width) return;
@@ -748,7 +748,7 @@ void lcdDrawImage(uint16_t x, uint16_t y, GUI_CONST_STORAGE GUI_BITMAP* pBitmap)
 		lcdDrawPixels(x, y + i, (uint16_t*)(pBitmap->pData + i * pBitmap->bytesPerLine), pBitmap->bytesPerLine / (pBitmap->bitsPerPixel / 8));
 	}
 }
-
+*/
 void lcdHome(void)
 {
 	cursorXY.x = 0;
@@ -768,7 +768,7 @@ void lcdHome(void)
  *
  * \return void
  */
-void lcdDrawChar(int16_t x, int16_t y, unsigned char c, uint16_t color, uint16_t bg)
+/*void lcdDrawChar(int16_t x, int16_t y, unsigned char c, uint16_t color, uint16_t bg)
 {
 	if ((x >= lcdProperties.width) || 			// Clip right
 			(y >= lcdProperties.height) || 		// Clip bottom
@@ -806,7 +806,7 @@ void lcdDrawChar(int16_t x, int16_t y, unsigned char c, uint16_t color, uint16_t
 		xP = 0;
 	}
 }
-
+*/
 /**
  * \brief Print the specified Text
  *
@@ -815,7 +815,7 @@ void lcdDrawChar(int16_t x, int16_t y, unsigned char c, uint16_t color, uint16_t
  *
  * \return void
  */
-void lcdPrintf(const char *fmt, ...)
+/*void lcdPrintf(const char *fmt, ...)
 {
 	static char buf[256];
 	char *p;
@@ -859,7 +859,7 @@ void lcdPrintf(const char *fmt, ...)
 		}
 	}
 }
-
+*/
 /**
  * \brief Sets the font
  *
@@ -867,11 +867,11 @@ void lcdPrintf(const char *fmt, ...)
  *
  * \return void
  */
-void lcdSetTextFont(sFONT* font)
+/*void lcdSetTextFont(sFONT* font)
 {
 	lcdFont.pFont = font;
 }
-
+*/
 /**
  * \brief Sets the text color
  *
@@ -880,12 +880,12 @@ void lcdSetTextFont(sFONT* font)
  *
  * \return void
  */
-void lcdSetTextColor(uint16_t c, uint16_t b)
+/*void lcdSetTextColor(uint16_t c, uint16_t b)
 {
 	lcdFont.TextColor = c;
 	lcdFont.BackColor = b;
 }
-
+*/
 /**
  * \brief Set Text wrap
  *
@@ -893,11 +893,11 @@ void lcdSetTextColor(uint16_t c, uint16_t b)
  *
  * \return void
  */
-void lcdSetTextWrap(uint8_t w)
+/*void lcdSetTextWrap(uint8_t w)
 {
 	lcdFont.TextWrap = w;
 }
-
+*/
 void lcdSetOrientation(lcdOrientationTypeDef value)
 {
 	lcdProperties.orientation = value;
@@ -1034,11 +1034,11 @@ lcdOrientationTypeDef lcdGetOrientation(void)
   return lcdProperties.orientation;
 }
 
-sFONT* lcdGetTextFont(void)
+/*sFONT* lcdGetTextFont(void)
 {
 	return lcdFont.pFont;
 }
-
+*/
 lcdPropertiesTypeDef lcdGetProperties(void)
 {
   return lcdProperties;
